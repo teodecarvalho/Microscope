@@ -1,2 +1,5 @@
 venv
 .DS_*
+.idea
+*.png
+__pycache*

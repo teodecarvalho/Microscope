@@ -49,7 +49,7 @@ class Stage():
         self.send_gcode_str(f"G90 Y{-y}")
         return self.wait_move()
 
-    def scan(self, xend, yend, step_x, step_y, task, xstart = 0, ystart = 0):
+    def scan(self,camera, xend, yend, step_x, step_y, xstart = 0, ystart = 0):
         range_x = xend - xstart
         range_y = yend - ystart
         nsteps_x = ceil(range_x/float(step_x)) + 1
@@ -64,8 +64,8 @@ class Stage():
             flip = not flip
             for x in x_seq:
                 self.move_x(xstart + x * step_x)
-                task(x = x*step_x, y = y*step_y)
-
+                camera.capture_during_scan(x, y)
+        camera.cap.release()
 
 class Camera():
     def __init__(self, camera):
@@ -75,13 +75,21 @@ class Camera():
         self.cap = cv2.VideoCapture(camera)
 
     def capture(self):
-        frame = self.cap.read()[1]#.1 * self.cap.read()[1]
-        # for i in range(9):
-        #     frame += .1 * cap.read()[1] # return a single frame in variable `frame`
-        return frame
+        image = .1 * self.cap.read()[1]
+        for i in range(9):
+            image += .1 * self.cap.read()[1] # return a single frame in variable `frame`
+        return image
 
     def save(self, image_obj, filepath):
         cv2.imwrite(filepath, image_obj)
+
+    def crop(self, image, xstart, xend, ystart, yend):
+        return image[xstart:xend, ystart:yend]
+
+    def capture_during_scan(self, x, y):
+        self._image = self.capture()
+        self._image = self.crop(self._image, 50, 450, 50, 550)
+        self.save(self._image, f"{x}_{y}.png")
 
 # # The app camera cannot be opened with this camera
 # cap = cv2.VideoCapture(0)

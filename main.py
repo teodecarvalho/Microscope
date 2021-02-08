@@ -6,15 +6,12 @@ from time import sleep
 #import os
 
 from classes import Stage, Camera
-#stage = Stage("/dev/tty.usbserial-1460")
-camera = Camera(0)
+stage = Stage("COM4")
+camera = Camera(1)
 if __name__ == "__main__":
-    image = camera.capture()
-    camera.save(image,  "teste.png")
-    # def task(x, y):
-    #     print(x, y)
-    #     sleep(1)
-    # stage.scan(xend=10, yend=10, xstart=0, ystart=0, step_x=1, step_y=1, task = task)
+    stage.scan(xstart = 20, xend = 30, step_x = 1,
+               ystart = 5, yend = 15, step_y = 1,
+               camera = camera)
 
 
 # # The app camera cannot be opened with this camera
