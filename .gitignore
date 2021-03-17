@@ -1,4 +1,9 @@
 venv*
 .DS_*
 .idea
+<<<<<<< HEAD
 .idea/*
+=======
+*.png
+__pycache*
+>>>>>>> c0c6b64ce8cc2a32b92e71360cdce0cb4bdd4206
